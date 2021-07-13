@@ -1,20 +1,48 @@
 import { CircularProgress } from '@material-ui/core';
-import React, { ReactElement } from 'react';
+import axios from 'axios';
+import React, { useEffect, useState } from 'react';
 import SpotifyPlayer from 'react-spotify-web-playback';
+import TrackLyricsParamsType from '../types/TrackLyricsParamsType';
 
 type Props = {
     [x: string]: any
 }
 
-type Track = {
-    href: string;
-    id: number;
-    disc_number: number;
 
-}
 
 const TrackView = (props: Props,) => {
-const { track, accessToken } = props;
+const { track } = props;
+const [lyricsPressed, setLyricsPressed] = useState<TrackLyricsParamsType>()
+const [lyrics, setLyrics] = useState("")
+const [isLoading, setIsLoading] = useState<boolean>(false)
+
+
+
+
+useEffect(() => {
+  if(!lyricsPressed) return;
+
+  axios.get("http://localhost:3006/lyrics", {
+    params: {
+      track: lyricsPressed.title,
+      artist: lyricsPressed.artist,
+
+    }
+  }).then(res => setLyrics(res.data.lyrics));
+},[lyricsPressed])
+const lyricsObj = {
+    title: track.name,
+    artist: track.album.artists[0].name,
+}
+const onPressLyrics = () => {
+    setIsLoading(true);
+    setLyricsPressed(lyricsObj);
+    setTimeout(() => {
+        console.log(lyrics)
+        setIsLoading(false);
+    }, 3000)
+  }
+
 return (
     <>
         <div style={{
@@ -37,48 +65,60 @@ return (
                 <p style={{color:"#fff"}}>
                     {track.name}
                 </p>
-            </div>
-
-            <div style={{alignItems: "center", marginTop: 50}}>
-            <p style={{color:"white"}}>
-                    Artist: 
-                </p>
-                <p style={{color:"white"}}>
+                <p style={{color:"#808080"}}>
                     {track.album.artists[0].name}
                 </p>
             </div>
 
             <div style={{alignItems: "center", marginTop: 50}}>
-                <p style={{color:"white"}}>
+                <p style={{color:"#fff"}}>
                     Release Date: 
                 </p>
-                <p style={{color:"white"}}>
+                <p style={{color:"#808080"}}>
                     {track.album.release_date}
                 </p>
             </div>
 
 
             <div style={{alignItems: "center", marginTop: 50}}>
-            <p style={{color:"white"}}>
+            <p style={{color:"#fff"}}>
                     Total Tracks:
                 </p>
-                <p style={{color:"white"}}>
+                <p style={{color:"#808080", alignSelf:'center', alignItems:'center'}}>
                     {track.album.total_tracks}
                 </p>
             </div>
-        </div>
-        <div style={{alignItems: "center", backgroundColor: "#66DE93", width: "50%", alignSelf: "center", marginBottom: 50}}>
-                <a  style={{color: "#fff",
-                fontSize: 28,
-                    textDecoration: 'none',}}
-                    href={track.album.external_urls.spotify}>
-                    Open in Spotify
-                </a>
+            
+            <div 
+            onClick={onPressLyrics}
+            style={{
+                alignItems: "center", 
+                marginTop: 50, 
+                cursor:"pointer"}}>
+
+                {isLoading ?
+                <>
+                <CircularProgress color="secondary" />
+                <p style={{color:lyrics !== "No Lyrics Found"? "#66DE93" : "#ff0000"}}>
+                    {lyrics !== "No Lyrics Found" ? "Check your console" : lyrics}
+                </p>
+                </>:
+                    <p style={{color:"#66DE93"}}>
+                    Lyrics
+                </p>}
             </div>
-        
-        <div style={{backgroundColor: "#808080"}}>
-            <SpotifyPlayer token={accessToken} autoPlay={false} uris={["spotify:artist:1mcTU81TzQhprhouKaTkpq"]} />
         </div>
+
+        <div style={{alignItems: "center", backgroundColor: "#66DE93", width: "100%", alignSelf: "center"}}>
+        <iframe 
+            src={`https://open.spotify.com/embed/album/${track.album.id.toString()}`} 
+            width="100%" 
+            height="80" 
+            frameBorder="0" 
+            allowTransparency={true} 
+            allow="encrypted-media">
+        </iframe>
+            </div>
     </>
   )
 }

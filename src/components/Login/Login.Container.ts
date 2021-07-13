@@ -9,7 +9,7 @@ const [expiresIn, setExpiresIn] = useState("");
 
 useEffect(() => {
     axios
-      .post("http://localhost:3003/login", {
+      .post("http://localhost:3006/login", {
         code,
       })
       .then(res => {
@@ -30,7 +30,7 @@ useEffect(() => {
     if(!refreshToken || !expiresIn) return;
     const interval = setInterval(() =>{
     axios
-      .post("http://localhost:3003/refresh", {
+      .post("http://localhost:3006/refresh", {
         refreshToken,
       })
       .then(res => {

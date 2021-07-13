@@ -1,7 +1,9 @@
 import { TextField } from '@material-ui/core';
+import axios from 'axios';
 import React, { useEffect, useState } from 'react';
 import SpotifyWebApi from "spotify-web-api-node"
 import useAuth from '../Login/Login.Container';
+import TrackLyricsParamsType from '../types/TrackLyricsParamsType';
 import TrackView from './TrackView';
 
 type Props = {
@@ -12,16 +14,12 @@ const spotifyApi = new SpotifyWebApi({
     clientId: "8b945ef10ea24755b83ac50cede405a0",
   });
 
-
 const Dashboard = (props: Props) => {
     const { code } = props;
     const accessToken = useAuth(code)
     const [search, setSearch] = useState("")
     const [searchResults, setSearchResults] = useState([{}])
-    const [playingTrack, setPlayingTrack] = useState()
-    const [lyrics, setLyrics] = useState("")
-
-    
+   
   useEffect(() => {
     spotifyApi.setAccessToken(accessToken)
   }, [accessToken])
@@ -45,7 +43,6 @@ const Dashboard = (props: Props) => {
 
     return(
         <>
-
         <form  noValidate autoComplete="off">
             <TextField id="standard-basic" label="Search" color="secondary"
             onChange={e => searchFunction(e.target.value)}
