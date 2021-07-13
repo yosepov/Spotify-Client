@@ -1,10 +1,11 @@
 import React from 'react';
-import { Button, Link } from '@material-ui/core';
 
 const Login = () => {
 const AUTH_URL = "https://accounts.spotify.com/authorize?client_id=3854053d6fa8411b9b4ffbc147b8bbef&response_type=code&redirect_uri=http://localhost:3000&scope=streaming%20user-read-email%20user-read-private%20user-library-read%20user-library-modify%20user-read-playback-state%20user-modify-playback-state"
+return (
+<>
+<div style={{margin: 10}}>
 
-return (<>
     <h1>Spotify API task</h1>
     <p>Using the Spotify API, create a single page application search engine.</p>
     <p>
@@ -36,16 +37,16 @@ Your application should be responsive with appropriate handling of at least thre
 breakpoints: desktop, tablet (portrait) and mobile (portrait). It is entirely up to you how ✔️
     </p>
     <p>
-you display the app UI and data for each breakpoint.
-You are encouraged to use any tool or framework you see fit.
+you display the app UI and data for each breakpoint.✔️
+You are encouraged to use any tool or framework you see fit.✔️ React.js library
     </p>
     <p>
 Bonus points:
 Add a second API to the application. How you use it, what data you choose to get or
-send and how you choose to use or display that data is entirely up to you.
+send and how you choose to use or display that data is entirely up to you.✔️ lyrics-finder api
     </p>
     <p>
-Most importantly - have fun!
+Most importantly - have fun! ✔️ 
     </p>
     <div style={{
         textDecoration: 'none',
@@ -60,12 +61,14 @@ Most importantly - have fun!
 
     <a  href={AUTH_URL}
      style={{
-        textDecoration: 'none'}}>
+         textDecoration: 'none'}}>
             <p style={{marginLeft: 15}}> 
         Login With Spotify
             </p>
     </a>
         </div>
+
+</div>
         </>
 );
 }
